@@ -1,5 +1,6 @@
 import fastify from "fastify";
 import fastifyStatic from "@fastify/static";
+import fastifyCors from "@fastify/cors"; // 🆕 Import CORS
 import path from "path";
 import { fileURLToPath } from "url";
 import { AsyncDatabase } from "promised-sqlite3";
@@ -19,6 +20,12 @@ const __dirname = path.dirname(__filename);
 
 const db = await AsyncDatabase.open("./pizza.sqlite");
 
+// 🆕 Register CORS
+await server.register(fastifyCors, {
+  origin: "*", // or restrict to your Vercel domain: ["https://your-vercel-app.vercel.app"]
+});
+
+// Register static assets
 server.register(fastifyStatic, {
   root: path.join(__dirname, "public"),
   prefix: "/public/",
